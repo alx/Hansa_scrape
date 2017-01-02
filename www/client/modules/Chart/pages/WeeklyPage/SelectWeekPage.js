@@ -18,29 +18,26 @@ class SelectWeekChart extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { selectedDate: initDate };
     this.dateAdd = this.dateAdd.bind(this);
     this.dateSubtract = this.dateSubtract.bind(this);
   }
 
   componentDidMount() {
-    this.props.dispatch(fetchWeekChart(this.state.selectedDate));
+    this.props.dispatch(fetchWeekChart(moment("2016-10", "YYYY-MM")));
   }
 
   dateAdd(period) {
-    this.setState({selectedDate: moment(this.state.selectedDate).add(period)});
-    this.props.dispatch(fetchWeekChart(this.state.selectedDate));
+    this.props.dispatch(fetchWeekChart(moment(this.props.chartData.date, "YYYY-MM").add(period)));
   }
 
   dateSubtract(period) {
-    this.setState({selectedDate: moment(this.state.selectedDate).subtract(period)});
-    this.props.dispatch(fetchWeekChart(this.state.selectedDate));
+    this.props.dispatch(fetchWeekChart(moment(this.props.chartData.date, "YYYY-MM").subtract(period)));
   }
 
   render() {
     return (
       <div>
-        <WeekSelector dateAdd={this.dateAdd} dateSubtract={this.dateSubtract} selectedDate={this.state.selectedDate}/>
+        <WeekSelector dateAdd={this.dateAdd} dateSubtract={this.dateSubtract} selectedDate={moment(this.props.chartData.date, "YYYY-MM")}/>
         <WeekChart chartData={this.props.chartData}/>
       </div>
     );

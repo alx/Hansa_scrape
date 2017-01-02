@@ -105,6 +105,8 @@ export function getWeeklyNumber(req, res) {
         };
       });
 
+      chartData.date = req.params.date;
+
       res.json({chartData});
 
     });
