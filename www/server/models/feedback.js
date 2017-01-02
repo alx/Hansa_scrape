@@ -11,5 +11,6 @@ const feedbackSchema = new Schema({
   date: { type: 'Date', default: Date.now, required: true },
   dateAdded: { type: 'Date', default: Date.now, required: true },
 });
+feedbackSchema.set('collection', 'feedback');
 
 export default mongoose.model('feedback', feedbackSchema);

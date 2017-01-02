@@ -1199,6 +1199,10 @@ bluebird@2.10.2:
   version "2.10.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.10.2.tgz#024a5517295308857f14f91f1106fc3b555f446b"
 
+bluebird@3.0.5:
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.0.5.tgz#2ff9d07c9b3edb29d6d280fe07528365e7ecd392"
+
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.6"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.6.tgz#53344adb14617a13f6e8dd2ce28905d1c0ba3215"
@@ -1486,6 +1490,37 @@ chalk@^1.0.0, chalk@^1.1.0, chalk@^1.1.1, chalk@^1.1.3:
     has-ansi "^2.0.0"
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
+
+chart.js:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.4.0.tgz#44198073f0f43e5e16662e108420d92652a3c9a3"
+  dependencies:
+    chartjs-color "^2.0.0"
+    moment "^2.10.6"
+
+chart.js@~2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/chart.js/-/chart.js-2.3.0.tgz#40460e48e2c417c05fc3325cd84f7b000dc7d7d6"
+  dependencies:
+    chartjs-color "^2.0.0"
+    moment "^2.10.6"
+
+chartist:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/chartist/-/chartist-0.10.1.tgz#3dd513d531dfca6b78e777fe0500d9c7e6406931"
+
+chartjs-color-string@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/chartjs-color-string/-/chartjs-color-string-0.4.0.tgz#57748d4530ae28d8db0a5492182ba06dfdf2f468"
+  dependencies:
+    color-name "^1.0.0"
+
+chartjs-color@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/chartjs-color/-/chartjs-color-2.0.0.tgz#7f60c7256589b24914814ece757659117381e35b"
+  dependencies:
+    chartjs-color-string "^0.4.0"
+    color-convert "^0.5.3"
 
 cheerio@^0.22.0:
   version "0.22.0"
@@ -4318,7 +4353,7 @@ lodash.isarray@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/lodash.isarray/-/lodash.isarray-3.0.4.tgz#79e4eb88c36a8122af86f844aa9bcd851b5fbb55"
 
-lodash.isequal@^4.0.0:
+lodash.isequal@^4.0.0, lodash.isequal@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.4.0.tgz#6295768e98e14dc15ce8d362ef6340db82852031"
 
@@ -4621,6 +4656,10 @@ mockgoose@^6.0.3:
     q "^1.4.1"
     rimraf "^2.5.1"
 
+moment, moment@^2.10.6:
+  version "2.17.1"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.17.1.tgz#fed9506063f36b10f066c8b59a144d7faebe1d82"
+
 mongodb-core@2.0.14:
   version "2.0.14"
   resolved "https://registry.yarnpkg.com/mongodb-core/-/mongodb-core-2.0.14.tgz#4e8743b87343d169a7622535edbd47dcacd790be"
@@ -4654,6 +4693,12 @@ mongodb@2.2.12:
     es6-promise "3.2.1"
     mongodb-core "2.0.14"
     readable-stream "2.1.5"
+
+mongoose-paginate:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/mongoose-paginate/-/mongoose-paginate-5.0.3.tgz#d7ae49ed5bf64f1f7af7620ea865b67058c55371"
+  dependencies:
+    bluebird "3.0.5"
 
 mongoose@^4.4.20:
   version "4.7.2"
@@ -6073,6 +6118,21 @@ react-base16-styling@^0.4.1:
     lodash.curry "^4.0.1"
     lodash.flow "^3.3.0"
     pure-color "^1.2.0"
+
+react-chartist:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/react-chartist/-/react-chartist-0.11.0.tgz#85a2dd68f40c90995a87ac1e237d5194dd9745a8"
+
+react-chartjs-2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-1.6.2.tgz#ce06dd1b1012d36e5ba134bd406b7626d4d9b7c5"
+  dependencies:
+    chart.js "~2.3.0"
+    lodash.isequal "^4.4.0"
+
+"react-chartjs@git+https://github.com/reactjs/react-chartjs#chartjs-v2":
+  version "0.7.3"
+  resolved "git+https://github.com/reactjs/react-chartjs#da9f718c19b8b3904fd9c46c151ae48b401b7a97"
 
 react-deep-force-update@^2.0.1:
   version "2.0.1"

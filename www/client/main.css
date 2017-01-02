@@ -8,6 +8,7 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	line-height: normal;
+  background-color: #222;
 }
 
 ::-webkit-input-placeholder {

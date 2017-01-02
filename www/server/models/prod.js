@@ -1,7 +1,9 @@
 import mongoose from 'mongoose';
+import mongoosePaginate from 'mongoose-paginate';
+
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema({
+const prodSchema = new Schema({
   delivery: { type: 'String', required: true },
   product: { type: 'String', required: true },
   price_usd: { type: 'String', required: true },
@@ -12,5 +14,7 @@ const productSchema = new Schema({
   product_type: { type: 'String', required: true },
   dateAdded: { type: 'Date', default: Date.now, required: true },
 });
+prodSchema.set('collection', 'prod');
+prodSchema.plugin(mongoosePaginate);
 
-export default mongoose.model('prod', productSchema);
+export default mongoose.model('prod', prodSchema);

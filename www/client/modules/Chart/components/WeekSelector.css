@@ -1,0 +1,15 @@
+.weekSelector {
+  float:right;
+  top: 60px;
+  position: relative;
+  color: #CCC;
+  font-size: 40px;
+}
+
+.weekSelector a {
+  text-decoration: none;
+  color: #FFF;
+  bottom: 4px;
+  position:relative;
+  margin: 0 5px;
+}

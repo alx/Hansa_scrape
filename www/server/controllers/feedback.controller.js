@@ -25,11 +25,12 @@ export function getFeedbacks(req, res) {
  * @returns void
  */
 export function addFeedback(req, res) {
-  if (!req.body.feedback.product_id ||
+  if (!req.body.feedback.prod_id ||
       !req.body.feedback.user ||
       !req.body.feedback.delivery_time ||
       !req.body.feedback.note ||
-      !req.body.feedback.text
+      !req.body.feedback.text ||
+      !req.body.feedback.date
   ) {
     res.status(403).end();
   }
@@ -37,11 +38,12 @@ export function addFeedback(req, res) {
   const newFeedback = new Feedback(req.body.feedback);
 
   // Let's sanitize inputs
-  newFeedback.product_id = sanitizeHtml(newFeedback.product_id);
+  newFeedback.prod_id = sanitizeHtml(newFeedback.prod_id);
   newFeedback.user = sanitizeHtml(newFeedback.user);
   newFeedback.delivery_time = sanitizeHtml(newFeedback.delivery_time);
   newFeedback.note = sanitizeHtml(newFeedback.note);
   newFeedback.text = sanitizeHtml(newFeedback.text);
+  newFeedback.date = sanitizeHtml(newFeedback.date);
 
   newFeedback.cuid = cuid();
   newFeedback.save((err, saved) => {

@@ -32,10 +32,11 @@ import Helmet from 'react-helmet';
 // Import required modules
 import routes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
-import vendors from './routes/vendor.routes';
-import products from './routes/product.routes';
+//import vendors from './routes/vendor.routes';
+import prods from './routes/prod.routes';
 import feedbacks from './routes/feedback.routes';
-import dummyData from './dummyData';
+import charts from './routes/chart.routes';
+//import dummyData from './dummyData';
 import serverConfig from './config';
 
 // Set native promises as mongoose promise
@@ -49,7 +50,7 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   }
 
   // feed some dummy data in DB.
-  dummyData();
+  //dummyData();
 });
 
 // Apply body Parser and server public assets and routes
@@ -57,9 +58,9 @@ app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist')));
-app.use('/api', vendors);
-app.use('/api', products);
+app.use('/api', prods);
 app.use('/api', feedbacks);
+app.use('/api', charts);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {
@@ -80,8 +81,8 @@ const renderFullPage = (html, initialState) => {
         ${head.script.toString()}
 
         ${process.env.NODE_ENV === 'production' ? `<link rel='stylesheet' href='${assetsManifest['/app.css']}' />` : ''}
+        <link href='//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css' rel='stylesheet' type='text/css'/>
         <link href='https://fonts.googleapis.com/css?family=Lato:400,300,700' rel='stylesheet' type='text/css'/>
-        <link rel="shortcut icon" href="http://res.cloudinary.com/hashnode/image/upload/v1455629445/static_imgs/mern/mern-favicon-circle-fill.png" type="image/png" />
       </head>
       <body>
         <div id="root">${html}</div>
