@@ -28,13 +28,13 @@ def main():
     start, stop = sys.argv[1], sys.argv[2]
 
   except IndexError:
-    logger.error( '%s start stop'%sys.argv[0] ) 
+    logger.error( '{0!s} start stop'.format(sys.argv[0]) ) 
     sys.exit(-1)
 
 
   logger.info("Scaper Start")
   [ job_queue.put(product_base_url+str(i)+suffix)  for i in xrange(int(start),int(stop))]
-  logger.info("Got %d products in queue"%job_queue.qsize())
+  logger.info("Got {0:d} products in queue".format(job_queue.qsize()))
   threads = [threading.Thread(target=hansa_worker) for x in xrange(thread_pool_size)]
   for thread in threads:
       thread.start()
@@ -76,7 +76,7 @@ def hansa_worker():
       job_done=True
 
     except Exception, e: 
-      logger.error("Exception in thread, url :%s "%url)
+      logger.error("Exception in thread, url :{0!s} ".format(url))
       traceback.print_exc()
       #print html
       #job_done=True
