@@ -36,6 +36,7 @@ import { fetchComponentData } from './util/fetchData';
 import prods from './routes/prod.routes';
 import feedbacks from './routes/feedback.routes';
 import charts from './routes/chart.routes';
+import networks from './routes/network.routes';
 //import dummyData from './dummyData';
 import serverConfig from './config';
 
@@ -61,6 +62,7 @@ app.use(Express.static(path.resolve(__dirname, '../dist')));
 app.use('/api', prods);
 app.use('/api', feedbacks);
 app.use('/api', charts);
+app.use('/api', networks);
 
 // Render Initial HTML
 const renderFullPage = (html, initialState) => {

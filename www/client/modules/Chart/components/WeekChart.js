@@ -11,37 +11,37 @@ class WeekChart extends Component {
         legend: {
           position: 'bottom',
           labels: {
-            fontColor: "#DDD"
+            fontColor: "#EEE"
           }
         },
         scales: {
           yAxes: [
             {
               gridLines: {
-                color: "rgba(200, 200, 200, 0.1)",
-                zeroLineColor: "rgba(200, 200, 200, 0.25)"
+                color: "rgba(200, 200, 200, 0.8)",
+                zeroLineColor: "rgba(200, 200, 200, 0.85)"
               },
               ticks: {
                 max: 55
               },
               scaleLabel: {
                 display:true,
-                labelString: "BTC amount"
+                labelString: "Vendors"
               }
             }
           ],
           xAxes: [
             {
               gridLines: {
-                color: "rgba(200, 200, 200, 0.1)",
-                zeroLineColor: "rgba(200, 200, 200, 0.25)"
+                color: "rgba(200, 200, 200, 0.8)",
+                zeroLineColor: "rgba(200, 200, 200, 0.85)"
               },
               ticks: {
                 max: 280
               },
               scaleLabel: {
                 display:true,
-                labelString: "Feedback count"
+                labelString: "Clients"
               }
             }
           ]
@@ -94,8 +94,8 @@ class WeekChart extends Component {
           data: [
             {
               x:dataRow.count,
-              y:dataRow.amount_btc,
-              r:dataRow.vendors.length
+              r:dataRow.amount_btc,
+              y:dataRow.vendors.length
             }
           ]
         };
