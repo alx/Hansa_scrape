@@ -9,9 +9,9 @@ import async from 'async';
 // db.feedback.find().forEach(function(doc) { doc.date = new Date(doc.date); db.feedback.save(doc); })
 
 const COLORS = {
-  vendor: '#d95f02',
-  user: '#1b9e77',
-  edge: '#7570b3'
+  user: '#009688',
+  vendor: '#FFC107',
+  edge: '#455A64'
 }
 
 function buildFirstNetwork(feedbacks) {
