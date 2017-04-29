@@ -9,52 +9,10 @@ import async from 'async';
 // db.feedback.find().forEach(function(doc) { doc.date = new Date(doc.date); db.feedback.save(doc); })
 
 const COLORS = {
-  user: '#009688',
-  vendor: '#FFC107',
+  user: '#74C9B7',
+  vendor: '#C03E3F',
+  product: '#D0B554',
   edge: '#455A64'
-}
-
-function buildFirstNetwork(feedbacks) {
-
-  let nodes = {};
-  let edges = {};
-
-  feedbacks.forEach( feedback => {
-
-    if(!nodes[feedback.user]) {
-      nodes[feedback.user] = {id: feedback.user, size: 1, color: COLORS.user};
-    } else {
-      nodes[feedback.user].size += 1;
-    }
-
-    if(!nodes[feedback.prod_id]) {
-      nodes[feedback.prod_id] = {id: feedback.prod_id, size: 1, color: COLORS.vendor};
-    } else {
-      nodes[feedback.prod_id].size += 1;
-    }
-
-    const edge_id = feedback.prod_id + '-' + feedback.user;
-    if(!edges[edge_id]) {
-      edges[edge_id] = {
-        id: edge_id,
-        source: feedback.prod_id,
-        target: feedback.user,
-        color: COLORS.edge,
-        weight: 1
-      };
-    } else {
-      edges[edge_id].weight += 1;
-    }
-
-  });
-
-  return {nodes: nodes, edges: edges};
-}
-
-function getFeedbacks(callback) {
-  Feedback.find({}, 'user prod_id').exec((err, feedbacks) => {
-    callback(null, buildFirstNetwork(feedbacks));
-  });
 }
 
 function getFeedbacksByDate(start, end, callback) {
@@ -63,58 +21,160 @@ function getFeedbacksByDate(start, end, callback) {
       $gt: start,
       $lt: end
     }
-  }, 'user prod_id').exec((err, feedbacks) => {
-    callback(null, buildFirstNetwork(feedbacks));
+  }, 'user prod_id note').exec((err, feedbacks) => {
+    callback(null, feedbacks);
   });
 }
 
-function getProductVendor(network, callback) {
+function getProducts(feedbacks, callback) {
 
-  const vendor_nodes = Object.keys(network.nodes).filter(node_key => {
-    return node_key.length > 5;
-  });
+  const product_ids = feedbacks.map( feedback => {
+    return feedback.prod_id;
+  }).filter((v, i, a) => a.indexOf(v) === i); // only keep uniques
+
 
   Prod.find({
-    "product_id": {$in: vendor_nodes}
-  }).exec((err, prods) => {
-    prods.forEach(product => {
-      network.nodes[product.product_id].label = product.vendor;
-    });
-    callback(null, network);
+    "product_id": {$in: product_ids}
+  }).exec((err, products) => {
+    callback(null, {feedbacks: feedbacks, products: products});
   });
 
 }
 
-function mergeVendorProducts(network, callback) {
+function buildNetwork(data, callback) {
 
-  const product_node_keys = Object.keys(network.nodes).filter(node_key => {
-    return node_key.length > 5;
-  });
+  const feedbacks = data.feedbacks;
+  const products = data.products;
 
-  product_node_keys.forEach(node_key => {
+  const network = {nodes: [], edges: []};
+  let edge_id = 0;
 
-    const product_node = network.nodes[node_key];
-    const vendor_label = product_node.label;
+  products.forEach( product => {
 
-    if(!network.nodes[vendor_label]) {
-      network.nodes[vendor_label] = product_node;
-      network.nodes[vendor_label].id = vendor_label;
-    } else {
-      network.nodes[vendor_label].size += product_node.size;
+    let vendor = network.nodes.find( node => {
+      return node.id == product.vendor;
+    });
+
+    if(typeof(vendor) == 'undefined') {
+      vendor = {
+        id: product.vendor,
+        label: product.vendor,
+        color: COLORS.vendor,
+        type: 'square',
+        size: 0,
+        metadata: {
+          notes: [],
+          category: 'vendor',
+          nb_transactions: 0,
+        }
+      };
+      network.nodes.push(vendor);
     }
 
-    Object.keys(network.edges).filter(edge_key => {
-      return edge_key.indexOf(node_key) != -1;
-    }).forEach(edge_key => {
-      network.edges[edge_key].source = vendor_label;
-    })
+    let product_node = network.nodes.find( node => {
+      return node.id == product.product_id;
+    });
 
-    delete network.nodes[node_key];
+    if(typeof(product_node) == 'undefined') {
+      product_node = {
+        id: product.product_id,
+        label: product.product,
+        color: COLORS.product,
+        type: 'diamond',
+        size: 0,
+        metadata: {
+          category: 'product',
+          product_id: product.product_id,
+          price_usd: product.price_usd,
+          price_btc: product.price_btc,
+          delivery: product.delivery,
+          type: product.product_type,
+          vendor: product.vendor,
+          notes: [],
+          nb_transactions: 0,
+        }
+      };
+      network.nodes.push(product_node);
+    }
 
+    edge_id += 1;
+    network.edges.push({
+      id: edge_id,
+      source: vendor.id,
+      target: product_node.id
+    });
+
+  });
+
+  feedbacks.forEach( feedback => {
+
+    const related_product = network.nodes.find(node => {
+      return node.id == feedback.prod_id;
+    });
+
+    const related_vendor = network.nodes.find( node => {
+      return node.id == related_product.metadata.vendor;
+    });
+
+    let client = network.nodes.find( node => {
+      return node.id == feedback.user;
+    });
+
+    if(typeof(client) == 'undefined') {
+      client = {
+        id: feedback.user,
+        label: feedback.user,
+        size: 0,
+        color: COLORS.client,
+        metadata: {
+          category: 'client',
+          nb_transactions: 0,
+          notes: [],
+        }
+      };
+      network.nodes.push(client);
+    }
+
+    const price_btc = parseFloat(related_product.metadata.price_btc);
+    client.size += price_btc;
+    related_product.size += price_btc;
+    related_vendor.size += price_btc;
+
+    client.metadata.nb_transactions += 1;
+    related_product.metadata.nb_transactions += 1;
+    related_vendor.metadata.nb_transactions += 1;
+
+    client.metadata.notes.push((parseInt(feedback.note) + 1));
+    related_product.metadata.notes.push((parseInt(feedback.note) + 1));
+    related_vendor.metadata.notes.push((parseInt(feedback.note) + 1));
+
+    let client_product_edge = network.edges.find( edge => {
+      return (edge.source == client.id) &&
+             (edge.target == related_product.id);
+    });
+
+    if(typeof(client_product_edge) != 'undefined') {
+      client_product_edge.weight += 1;
+    } else {
+      edge_id += 1;
+      network.edges.push({
+        id: edge_id,
+        source: client.id,
+        target: related_product.id,
+        weight: 1
+      });
+    }
+  });
+
+  network.nodes.forEach(node => {
+    const notes = node.metadata.notes;
+    node.metadata.mean_note = notes.reduce((a, b) => a + b) / notes.length;
+    node.metadata.score = node.metadata.mean_note / 2;
   });
 
   callback(null, network);
 }
+
 
 function mapToArray(network, callback) {
   network.nodes = Object.values(network.nodes);
@@ -122,19 +182,12 @@ function mapToArray(network, callback) {
   callback(null, network);
 }
 
-export function getNetwork(req, res) {
-  async.waterfall([
-    getFeedbacks,
-    getProductVendor,
-    mergeVendorProducts,
-    mapToArray,
-  ], function (error, results) {
-    if (error) {
-      res.status(500).send(error);
-      return;
-    }
-    res.json(results);
+function randomizeNodePosition(network, callback) {
+  network.nodes.forEach( node => {
+    node.x = Math.random();
+    node.y = Math.random();
   });
+  callback(null, network);
 }
 
 export function getNetworkDuringDate(req, res) {
@@ -145,9 +198,9 @@ export function getNetworkDuringDate(req, res) {
 
   async.waterfall([
     async.apply(getFeedbacksByDate, start, end),
-    getProductVendor,
-    mergeVendorProducts,
-    mapToArray,
+    getProducts,
+    buildNetwork,
+    randomizeNodePosition,
   ], function (error, results) {
     if (error) {
       res.status(500).send(error);
@@ -155,4 +208,5 @@ export function getNetworkDuringDate(req, res) {
     }
     res.json(results);
   });
+
 }
